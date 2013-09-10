@@ -1,5 +1,12 @@
 
 
+/*
+ * Other functions to edit:
+ * addSocket - add all of the init stuff
+ * removeSocket - add logic to remove it from priority map and sock map
+ * userPriority - add this function to activate the strategy
+ */
+
 function applyPlugin(socketObj) {
 
   // this is going to be a map from number of outstanding requests to a list of
@@ -14,7 +21,7 @@ function applyPlugin(socketObj) {
   socketObj.send = function (msg) {
     var socks = this.socks
       , sock = null
-      , index = null,
+      , indentity = null,
       , count = null,
       , len = socks.length
       , args = Array.isArray(msg)
@@ -29,8 +36,9 @@ function applyPlugin(socketObj) {
       // the value of n is always the "next" thing we should grab off the end
       // of the list
       sock = this.socks[this.n];
-      index = this.n;
+      identity = sock.identity;
       count = 1;
+      sock.count = 0;
       this.n++;
     } else {
       // we are going to get something that is the least busy, and it will now
@@ -40,18 +48,21 @@ function applyPlugin(socketObj) {
 
       // get the next index, which will be the first item in the count-1
       // priority list
-      index = this.priorityMap[count-1].shift();
-      sock = this.socks[index];
+      identity = this.priorityMap[count-1].shift();
+      sock = this.sockMap[identity];
     }
 
     // TODO: make this actually put things in sorted order
     this.priorities.push(count);
+
     if (this.priorityMap[count] === undefined) {
       this.priorityMap[count] = [];
     }
 
     this.priorityMap[count].push(index);
-    this.sockMap[index] = count;
+    sock.count++;
+
+    this.sockMap[this.identity] = sock;
 
     if (sock) {
       var hasCallback = 'function' == typeof args[args.length - 1];
@@ -69,5 +80,29 @@ function applyPlugin(socketObj) {
       this.enqueue(args);
     }
   }
+
+  socketObj.onmesage = function () {
+    var self = this;
+    return function(msg, multipart){
+      if (!multipart) return debug('expected multipart: %j', msg);
+      var id = msg.pop();
+      var fn = self.callbacks[id];
+      if (!fn) return debug('missing callback %s', id);
+      fn.apply(null, msg);
+      delete self.callbacks[id];
+
+      var identity = id.split(":")[0];
+      var sock = self.sockMap[identity];
+
+      //TODO: remove from sorted list here
+      //
+
+      var ri = self.priorityMap[sock.count].indexOf(identity);
+      self.priorityMap[sock.count].splice(ri, 1);
+
+      sock.count--;
+      self.priorityMap[sock.count].push(identity);
+    };
+  };
 
 }
