@@ -1,17 +1,17 @@
 {
   "name": "axon-priority",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "priority module for axon",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "dependencies": {
+    "debug" : "*"
   },
   "devDependencies": {
     "axon": "~1.0.0",
-    "should" : "*",
-    "debug" : "*"
+    "should" : "*"
   },
   "scripts": {
     "test": "make test"
