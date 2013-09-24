@@ -4,9 +4,10 @@ var exporting = {};
 exporting.plugin = require('./lib/priority');
 
 exporting.patchSocket = function (sock) {
-  sock.usePlugin = function (plugin) {
-    this.use(plugin({fallback : this.enqueue}));
+  sock.usePriority = function () {
+    this.use(exporting.plugin({fallback : this.enqueue}));
   }
+  sock.usePriority();
 }
 
 module.exports = exports = exporting;

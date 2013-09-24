@@ -9,7 +9,6 @@ var req = axon.socket('req')
 
 
 priority.patchSocket(req);
-req.usePlugin(priority.plugin);
 
 var count1 = 0;
 var count2 = 0;
