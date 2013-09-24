@@ -1,0 +1,33 @@
+{
+  "name": "axon-priority",
+  "version": "0.0.1",
+  "description": "priority module for axon",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "axon": "~1.0.0",
+    "should" : "*",
+    "debug" : "*"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ebensing/axon-priority"
+  },
+  "keywords": [
+    "axon",
+    "priority",
+    "reqrep"
+  ],
+  "author": "EJ Bensing",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ebensing/axon-priority/issues"
+  }
+}
