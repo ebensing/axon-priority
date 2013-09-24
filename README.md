@@ -10,10 +10,10 @@ Usage
 
 ```
 var axon = require('axon');
-var axon-priority = require('axon-priority');
+var axonPriority = require('axon-priority');
 
 var req = axon.socket('req');
-axon-priority.patchSocket(req);
+axonPriority.patchSocket(req);
 
 // continue to use the socket as you normally would...
 ```
